@@ -1,0 +1,2108 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>띵타 유저상점 시세</title>
+
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+
+  background:
+    #0b0e13;
+
+  color:
+    #e9edf5;
+
+  font-family:
+    Arial,
+    "Noto Sans KR",
+    sans-serif;
+}
+
+
+body {
+  min-height: 100vh;
+}
+
+
+/*******************************************************
+ * 전체
+ *******************************************************/
+
+.container {
+
+  max-width:
+    1450px;
+
+  margin:
+    auto;
+
+  padding:
+    30px;
+}
+
+
+/*******************************************************
+ * 헤더
+ *******************************************************/
+
+.header {
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  gap:
+    20px;
+
+  margin-bottom:
+    25px;
+}
+
+
+.title {
+
+  font-size:
+    30px;
+
+  font-weight:
+    900;
+}
+
+
+.subtitle {
+
+  margin-top:
+    6px;
+
+  color:
+    #7f8795;
+
+  font-size:
+    14px;
+}
+
+
+
+.header-actions {
+
+  display:
+    flex;
+
+  align-items:
+    center;
+
+  gap:
+    10px;
+}
+
+.search {
+
+  width:
+    300px;
+
+  padding:
+    13px 16px;
+
+  border:
+    1px solid #252b35;
+
+  border-radius:
+    10px;
+
+  outline:
+    none;
+
+  background:
+    #131821;
+
+  color:
+    white;
+
+  font-size:
+    14px;
+}
+
+
+.search:focus {
+
+  border-color:
+    #536dfe;
+}
+
+/*******************************************************
+ * 새로고침 버튼
+ *******************************************************/
+
+.refresh-button {
+
+  border:
+    1px solid #303846;
+
+  border-radius:
+    10px;
+
+  padding:
+    13px 16px;
+
+  background:
+    #171d27;
+
+  color:
+    #e9edf5;
+
+  font-size:
+    14px;
+
+  font-weight:
+    700;
+
+  cursor:
+    pointer;
+
+  white-space:
+    nowrap;
+
+  transition:
+    background .15s,
+    border-color .15s,
+    transform .15s;
+}
+
+.refresh-button:hover {
+
+  background:
+    #202734;
+
+  border-color:
+    #536dfe;
+}
+
+.refresh-button:active {
+
+  transform:
+    scale(.97);
+}
+
+.refresh-button:disabled {
+
+  opacity:
+    .55;
+
+  cursor:
+    wait;
+}
+
+
+
+
+/*******************************************************
+ * 시장 상태
+ *******************************************************/
+
+.market-bar {
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  padding:
+    15px 18px;
+
+  margin-bottom:
+    18px;
+
+  background:
+    #11151c;
+
+  border:
+    1px solid #202630;
+
+  border-radius:
+    12px;
+}
+
+
+.market-status {
+
+  color:
+    #8d96a5;
+
+  font-size:
+    13px;
+}
+
+
+/*******************************************************
+ * 아이템 그리드
+ *******************************************************/
+
+.grid {
+
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fill,
+      minmax(260px, 1fr)
+    );
+
+  gap:
+    14px;
+}
+
+
+/*******************************************************
+ * 카드
+ *******************************************************/
+
+.card {
+
+  position:
+    relative;
+
+  padding:
+    20px;
+
+  background:
+    #11151c;
+
+  border:
+    1px solid #202630;
+
+  border-radius:
+    14px;
+
+  cursor:
+    pointer;
+
+  transition:
+    transform .15s,
+    border-color .15s,
+    background .15s;
+}
+
+
+.card:hover {
+
+  transform:
+    translateY(-2px);
+
+  border-color:
+    #394252;
+
+  background:
+    #151a22;
+}
+
+
+.item-name {
+
+  font-size:
+    16px;
+
+  font-weight:
+    700;
+
+  margin-bottom:
+    14px;
+}
+
+
+.current-price {
+
+  font-size:
+    27px;
+
+  font-weight:
+    900;
+
+  margin-bottom:
+    8px;
+}
+
+
+.change {
+
+  font-size:
+    14px;
+
+  font-weight:
+    800;
+}
+
+
+.up {
+
+  color:
+    #ff4d4d;
+}
+
+
+.down {
+
+  color:
+    #4d8dff;
+}
+
+
+.same {
+
+  color:
+    #89919f;
+}
+
+
+.info {
+
+  margin-top:
+    16px;
+
+  padding-top:
+    13px;
+
+  border-top:
+    1px solid #202630;
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  color:
+    #737c8b;
+
+  font-size:
+    12px;
+}
+
+
+/*******************************************************
+ * 로딩
+ *******************************************************/
+
+.loading {
+
+  grid-column:
+    1 / -1;
+
+  text-align:
+    center;
+
+  padding:
+    80px 20px;
+
+  color:
+    #747d8c;
+}
+
+
+/*******************************************************
+ * 상세 배경
+ *******************************************************/
+
+.detail {
+
+  display:
+    none;
+
+  position:
+    fixed;
+
+  inset:
+    0;
+
+  background:
+    rgba(5, 7, 10, .86);
+
+  backdrop-filter:
+    blur(8px);
+
+  z-index:
+    100;
+}
+
+
+/*******************************************************
+ * 상세 박스
+ *******************************************************/
+
+.detail-box {
+
+  position:
+    absolute;
+
+  top:
+    50%;
+
+  left:
+    50%;
+
+  transform:
+    translate(-50%, -50%);
+
+  width:
+    min(
+      900px,
+      calc(100% - 30px)
+    );
+
+  max-height:
+    calc(100vh - 40px);
+
+  overflow:
+    hidden;
+
+  padding:
+    28px;
+
+  background:
+    #11151c;
+
+  border:
+    1px solid #2a313d;
+
+  border-radius:
+    18px;
+
+  box-shadow:
+    0 20px 70px
+    rgba(0,0,0,.5);
+
+  display:
+    flex;
+
+  flex-direction:
+    column;
+}
+
+
+/*******************************************************
+ * 닫기
+ *******************************************************/
+
+.detail-close {
+
+  position:
+    absolute;
+
+  right:
+    18px;
+
+  top:
+    12px;
+
+  font-size:
+    28px;
+
+  color:
+    #737c8b;
+
+  cursor:
+    pointer;
+
+  z-index:
+    5;
+}
+
+
+.detail-close:hover {
+
+  color:
+    white;
+}
+
+
+/*******************************************************
+ * 상세 제목
+ *******************************************************/
+
+.detail-name {
+
+  font-size:
+    26px;
+
+  font-weight:
+    900;
+
+  margin-bottom:
+    8px;
+
+  padding-right:
+    40px;
+}
+
+
+.detail-price {
+
+  font-size:
+    40px;
+
+  font-weight:
+    900;
+
+  margin-bottom:
+    8px;
+}
+
+
+.detail-change {
+
+  font-size:
+    17px;
+
+  font-weight:
+    800;
+
+  margin-bottom:
+    20px;
+}
+
+
+/*******************************************************
+ * 상세 정보
+ *******************************************************/
+
+.detail-grid {
+
+  display:
+    grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap:
+    10px;
+
+  margin-bottom:
+    20px;
+}
+
+
+.detail-stat {
+
+  padding:
+    14px;
+
+  background:
+    #0c1016;
+
+  border:
+    1px solid #202630;
+
+  border-radius:
+    10px;
+}
+
+
+.detail-label {
+
+  color:
+    #737c8b;
+
+  font-size:
+    12px;
+
+  margin-bottom:
+    7px;
+}
+
+
+.detail-value {
+
+  font-size:
+    16px;
+
+  font-weight:
+    700;
+}
+
+
+/*******************************************************
+ * 가격 기록 제목
+ *******************************************************/
+
+.history-title {
+
+  display:
+    flex;
+
+  justify-content:
+    space-between;
+
+  align-items:
+    center;
+
+  margin-bottom:
+    10px;
+
+  font-size:
+    16px;
+
+  font-weight:
+    800;
+}
+
+
+.history-count {
+
+  color:
+    #737c8b;
+
+  font-size:
+    12px;
+
+  font-weight:
+    normal;
+}
+
+
+/*******************************************************
+ * 가격 기록
+ *******************************************************/
+
+.history {
+
+  min-height:
+    100px;
+
+  max-height:
+    360px;
+
+  overflow-y:
+    auto;
+
+  border:
+    1px solid #202630;
+
+  border-radius:
+    12px;
+
+  background:
+    #0c1016;
+}
+
+
+/*******************************************************
+ * 스크롤바
+ *******************************************************/
+
+.history::-webkit-scrollbar {
+
+  width:
+    8px;
+}
+
+
+.history::-webkit-scrollbar-track {
+
+  background:
+    #0c1016;
+}
+
+
+.history::-webkit-scrollbar-thumb {
+
+  background:
+    #303846;
+
+  border-radius:
+    10px;
+}
+
+
+.history::-webkit-scrollbar-thumb:hover {
+
+  background:
+    #454f60;
+}
+
+
+/*******************************************************
+ * 기록 한 줄
+ *******************************************************/
+
+.history-row {
+
+  display:
+    grid;
+
+  grid-template-columns:
+    180px
+    1fr
+    130px
+    180px;
+
+  align-items:
+    center;
+
+  gap:
+    10px;
+
+  padding:
+    13px 15px;
+
+  border-bottom:
+    1px solid #1d232d;
+
+  font-size:
+    13px;
+}
+
+
+.history-row:last-child {
+
+  border-bottom:
+    none;
+}
+
+
+.history-time {
+
+  color:
+    #737c8b;
+
+  white-space:
+    nowrap;
+}
+
+
+.history-name {
+
+  font-weight:
+    700;
+
+  overflow:
+    hidden;
+
+  text-overflow:
+    ellipsis;
+
+  white-space:
+    nowrap;
+}
+
+
+.history-price {
+
+  text-align:
+    right;
+
+  font-weight:
+    800;
+
+  white-space:
+    nowrap;
+}
+
+
+.history-change {
+
+  text-align:
+    right;
+
+  font-weight:
+    800;
+
+  white-space:
+    nowrap;
+}
+
+
+/*******************************************************
+ * 기록 없음
+ *******************************************************/
+
+.no-history {
+
+  padding:
+    50px 20px;
+
+  text-align:
+    center;
+
+  color:
+    #737c8b;
+}
+
+
+/*******************************************************
+ * 반응형
+ *******************************************************/
+
+@media (max-width: 800px) {
+
+  .container {
+
+    padding:
+      18px;
+  }
+
+
+  .header {
+
+    flex-direction:
+      column;
+
+    align-items:
+      stretch;
+  }
+
+
+  .header-actions {
+
+    flex-direction:
+      column;
+
+    align-items:
+      stretch;
+  }
+
+  .search {
+
+    width:
+      100%;
+  }
+
+  .refresh-button {
+
+    width:
+      100%;
+  }
+
+
+  .grid {
+
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .detail-box {
+
+    padding:
+      20px;
+  }
+
+
+  .detail-grid {
+
+    grid-template-columns:
+      1fr 1fr;
+  }
+
+
+  .history-row {
+
+    grid-template-columns:
+      130px
+      1fr
+      100px
+      140px;
+
+    font-size:
+      12px;
+  }
+}
+
+
+@media (max-width: 600px) {
+
+  .detail-grid {
+
+    grid-template-columns:
+      1fr;
+  }
+
+
+  .history-row {
+
+    grid-template-columns:
+      1fr
+      100px;
+  }
+
+
+  .history-time {
+
+    grid-column:
+      1 / -1;
+  }
+
+
+  .history-name {
+
+    display:
+      none;
+  }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+  <!-- =========================
+       헤더
+  ========================== -->
+
+  <div class="header">
+
+    <div>
+
+      <div class="title">
+        띵타 유저상점 시세
+      </div>
+
+      <div class="subtitle">
+        실시간 아이템 시장 가격
+      </div>
+
+    </div>
+
+
+    <div class="header-actions">
+
+      <input
+        id="search"
+        class="search"
+        placeholder="아이템 검색..."
+        oninput="render()"
+      >
+
+      <button
+        id="refreshButton"
+        class="refresh-button"
+        type="button"
+        onclick="refreshData()"
+      >
+        ↻ 새로고침
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       시장 상태
+  ========================== -->
+
+  <div class="market-bar">
+
+    <div>
+
+      <strong>
+        전체 시장
+      </strong>
+
+    </div>
+
+
+    <div
+      id="status"
+      class="market-status"
+    >
+      데이터 불러오는 중...
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       아이템
+  ========================== -->
+
+  <div
+    id="grid"
+    class="grid"
+  >
+
+    <div class="loading">
+      시세 데이터를 불러오는 중...
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     상세
+====================================================== -->
+
+<div
+  id="detail"
+  class="detail"
+  onclick="closeDetail(event)"
+>
+
+
+  <div
+    class="detail-box"
+    onclick="event.stopPropagation()"
+  >
+
+
+    <div
+      class="detail-close"
+      onclick="closeDetail()"
+    >
+      ×
+    </div>
+
+
+    <div
+      id="detailName"
+      class="detail-name"
+    >
+    </div>
+
+
+    <div
+      id="detailPrice"
+      class="detail-price"
+    >
+    </div>
+
+
+    <div
+      id="detailChange"
+      class="detail-change"
+    >
+    </div>
+
+
+    <!-- =========================
+         기본 정보
+    ========================== -->
+
+    <div class="detail-grid">
+
+
+      <div class="detail-stat">
+
+        <div class="detail-label">
+          현재 가격
+        </div>
+
+        <div
+          id="statCurrent"
+          class="detail-value"
+        >
+        </div>
+
+      </div>
+
+
+      <div class="detail-stat">
+
+        <div class="detail-label">
+          이전 가격
+        </div>
+
+        <div
+          id="statPrevious"
+          class="detail-value"
+        >
+        </div>
+
+      </div>
+
+
+      <div class="detail-stat">
+
+        <div class="detail-label">
+          거래 횟수
+        </div>
+
+        <div
+          id="statTransactions"
+          class="detail-value"
+        >
+        </div>
+
+      </div>
+
+
+    </div>
+
+
+    <!-- =========================
+         가격 기록
+    ========================== -->
+
+    <div class="history-title">
+
+      <span>
+        가격 기록
+      </span>
+
+      <span
+        id="historyCount"
+        class="history-count"
+      >
+      </span>
+
+    </div>
+
+
+    <div
+      id="history"
+      class="history"
+    >
+
+      <div class="no-history">
+        가격 기록을 불러오는 중...
+      </div>
+
+    </div>
+
+
+  </div>
+
+</div>
+
+
+<script>
+
+
+/*******************************************************
+ * 전역 데이터
+ *******************************************************/
+
+/*
+ * Google Apps Script 웹앱 주소
+ *
+ * GitHub Pages에서 직접 호출하기 때문에
+ * google.script.run 대신 JSONP API를 사용한다.
+ */
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbzwNUIQesVwFYic6qiYadoiT7phzvcx5w8h8JHOxv7iHlh-JtMtkBAe7ojeyDddmakB/exec";
+
+
+let marketData = [];
+
+let currentItem = null;
+
+
+/*******************************************************
+ * 데이터 로딩
+ *******************************************************/
+
+function jsonp(url, onSuccess, onFailure) {
+
+  const callbackName =
+    "__marketCallback_" +
+    Date.now() +
+    "_" +
+    Math.floor(Math.random() * 100000);
+
+  const script =
+    document.createElement("script");
+
+  let finished = false;
+
+  function cleanup() {
+
+    if (script.parentNode) {
+      script.parentNode.removeChild(script);
+    }
+
+    try {
+      delete window[callbackName];
+    } catch (e) {
+      window[callbackName] = undefined;
+    }
+  }
+
+  window[callbackName] =
+    function(data) {
+
+      if (finished) {
+        return;
+      }
+
+      finished = true;
+      cleanup();
+
+      onSuccess(
+        Array.isArray(data) ? data : []
+      );
+    };
+
+  script.onerror =
+    function(error) {
+
+      if (finished) {
+        return;
+      }
+
+      finished = true;
+      cleanup();
+
+      if (onFailure) {
+        onFailure(error);
+      }
+    };
+
+  script.src =
+    url +
+    (url.includes("?") ? "&" : "?") +
+    "callback=" +
+    encodeURIComponent(callbackName) +
+    "&_=" +
+    Date.now();
+
+  document.body.appendChild(script);
+
+  /*
+   * Apps Script 응답이 너무 오래 걸릴 경우
+   * 버튼이 무한히 로딩 상태에 남지 않도록 한다.
+   */
+  setTimeout(function() {
+
+    if (finished) {
+      return;
+    }
+
+    finished = true;
+    cleanup();
+
+    if (onFailure) {
+      onFailure(
+        new Error("API 응답 시간 초과")
+      );
+    }
+
+  }, 15000);
+}
+
+
+/*******************************************************
+ * 현재 시세 로딩
+ *******************************************************/
+
+function loadData(onComplete) {
+
+  const button =
+    document.getElementById(
+      "refreshButton"
+    );
+
+  if (button) {
+
+    button.disabled = true;
+
+    button.textContent =
+      "↻ 불러오는 중...";
+  }
+
+  document.getElementById(
+    "status"
+  ).textContent =
+    "시세 데이터를 불러오는 중...";
+
+
+  jsonp(
+    API_URL +
+      "?api=market",
+
+    function(data) {
+
+      marketData = data;
+
+      render();
+
+      document.getElementById(
+        "status"
+      ).textContent =
+        "아이템 " +
+        marketData.length +
+        "개 · " +
+        date(new Date()) +
+        " 갱신";
+
+
+      if (button) {
+
+        button.disabled = false;
+
+        button.textContent =
+          "↻ 새로고침";
+      }
+
+      if (onComplete) {
+        onComplete(true);
+      }
+    },
+
+    function(error) {
+
+      document.getElementById(
+        "status"
+      ).textContent =
+        "데이터를 불러오지 못했습니다.";
+
+      document.getElementById(
+        "grid"
+      ).innerHTML =
+        '<div class="loading">' +
+        '데이터를 불러오지 못했습니다.<br>' +
+        '<small>Apps Script API 배포 상태를 확인해주세요.</small>' +
+        '</div>';
+
+      console.error(error);
+
+      if (button) {
+
+        button.disabled = false;
+
+        button.textContent =
+          "↻ 다시 시도";
+      }
+
+      if (onComplete) {
+        onComplete(false);
+      }
+    }
+  );
+}
+
+
+/*******************************************************
+ * 새로고침 버튼
+ *******************************************************/
+
+function refreshData() {
+
+  loadData();
+}
+
+
+/*******************************************************
+ * 숫자 포맷
+ *******************************************************/
+
+function number(value) {
+
+  return Number(value || 0)
+    .toLocaleString("ko-KR");
+}
+
+
+/*******************************************************
+ * 날짜 포맷
+ *******************************************************/
+
+function date(value) {
+
+  if (!value) {
+
+    return "-";
+  }
+
+
+  const d =
+    new Date(value);
+
+
+  if (
+    isNaN(d.getTime())
+  ) {
+
+    return "-";
+  }
+
+
+  return d.toLocaleString(
+    "ko-KR",
+    {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    }
+  );
+}
+
+
+/*******************************************************
+ * 카드 렌더링
+ *******************************************************/
+
+function render() {
+
+  const grid =
+    document.getElementById(
+      "grid"
+    );
+
+
+  const keyword =
+    document
+      .getElementById("search")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const filtered =
+    marketData.filter(item =>
+      item.name
+        .toLowerCase()
+        .includes(keyword)
+    );
+
+
+  if (
+    filtered.length === 0
+  ) {
+
+    grid.innerHTML =
+      '<div class="loading">' +
+      '등록된 데이터가 없습니다.' +
+      '</div>';
+
+    return;
+  }
+
+
+  grid.innerHTML =
+    filtered
+      .map(function(item) {
+
+        const current =
+          Number(item.currentPrice) || 0;
+
+
+        const previous =
+          Number(item.previousPrice) || 0;
+
+
+        const change =
+          current -
+          previous;
+
+
+        let rate = 0;
+
+
+        if (
+          previous !== 0
+        ) {
+
+          rate =
+            (
+              change /
+              previous
+            ) * 100;
+        }
+
+
+        let className =
+          "same";
+
+        let arrow =
+          "—";
+
+
+        if (
+          change > 0
+        ) {
+
+          className =
+            "up";
+
+          arrow =
+            "▲";
+
+        } else if (
+          change < 0
+        ) {
+
+          className =
+            "down";
+
+          arrow =
+            "▼";
+        }
+
+
+        const sign =
+          change > 0
+            ? "+"
+            : "";
+
+
+        return `
+
+          <div
+            class="card"
+            onclick='openDetail(${JSON.stringify(item.name)})'
+          >
+
+            <div class="item-name">
+              ${escapeHtml(item.name)}
+            </div>
+
+
+            <div class="current-price">
+              ${number(current)} G
+            </div>
+
+
+            <div class="change ${className}">
+
+              ${arrow}
+
+              ${sign}${number(change)} G
+
+              (${sign}${rate.toFixed(2)}%)
+
+            </div>
+
+
+            <div class="info">
+
+              <span>
+                거래 ${number(item.transactionCount)}회
+              </span>
+
+              <span>
+                ${date(item.timestamp)}
+              </span>
+
+            </div>
+
+          </div>
+
+        `;
+
+      })
+      .join("");
+}
+
+
+/*******************************************************
+ * 상세 열기
+ *******************************************************/
+
+function openDetail(itemName) {
+
+  const item =
+    marketData.find(
+      item =>
+        item.name === itemName
+    );
+
+
+  if (!item) {
+
+    return;
+  }
+
+
+  currentItem =
+    item;
+
+
+  const current =
+    Number(item.currentPrice) || 0;
+
+
+  const previous =
+    Number(item.previousPrice) || 0;
+
+
+  const change =
+    current -
+    previous;
+
+
+  let rate = 0;
+
+
+  if (
+    previous !== 0
+  ) {
+
+    rate =
+      (
+        change /
+        previous
+      ) * 100;
+  }
+
+
+  let className =
+    "same";
+
+  let arrow =
+    "—";
+
+
+  if (
+    change > 0
+  ) {
+
+    className =
+      "up";
+
+    arrow =
+      "▲";
+
+  } else if (
+    change < 0
+  ) {
+
+    className =
+      "down";
+
+    arrow =
+      "▼";
+  }
+
+
+  const sign =
+    change > 0
+      ? "+"
+      : "";
+
+
+  document.getElementById(
+    "detailName"
+  ).textContent =
+    item.name;
+
+
+  document.getElementById(
+    "detailPrice"
+  ).textContent =
+    number(current) +
+    " G";
+
+
+  const changeElement =
+    document.getElementById(
+      "detailChange"
+    );
+
+
+  changeElement.className =
+    "detail-change " +
+    className;
+
+
+  changeElement.textContent =
+    arrow +
+    " " +
+    sign +
+    number(change) +
+    " G (" +
+    sign +
+    rate.toFixed(2) +
+    "%)";
+
+
+  document.getElementById(
+    "statCurrent"
+  ).textContent =
+    number(current) +
+    " G";
+
+
+  document.getElementById(
+    "statPrevious"
+  ).textContent =
+    number(previous) +
+    " G";
+
+
+  document.getElementById(
+    "statTransactions"
+  ).textContent =
+    number(item.transactionCount) +
+    "회";
+
+
+  document.getElementById(
+    "detail"
+  ).style.display =
+    "block";
+
+
+  /*
+   * 가격 기록 가져오기
+   */
+
+  loadHistory(item.name);
+}
+
+
+/*******************************************************
+ * 가격 기록 가져오기
+ *******************************************************/
+
+function loadHistory(itemName) {
+
+  const history =
+    document.getElementById(
+      "history"
+    );
+
+
+  const count =
+    document.getElementById(
+      "historyCount"
+    );
+
+
+  history.innerHTML =
+    '<div class="no-history">' +
+    '가격 기록을 불러오는 중...' +
+    '</div>';
+
+
+  count.textContent =
+    "";
+
+
+  jsonp(
+    API_URL +
+      "?api=history&item=" +
+      encodeURIComponent(itemName),
+
+    function(data) {
+
+      const records =
+        Array.isArray(data)
+          ? data
+          : [];
+
+      count.textContent =
+        records.length +
+        "개 기록";
+
+      renderHistory(records);
+    },
+
+    function(error) {
+
+      history.innerHTML =
+        '<div class="no-history">' +
+        '가격 기록을 불러오지 못했습니다.' +
+        '</div>';
+
+      console.error(error);
+    }
+  );
+}
+
+
+/*******************************************************
+ * 가격 기록 렌더링
+ *******************************************************/
+
+function renderHistory(records) {
+
+  const history =
+    document.getElementById(
+      "history"
+    );
+
+
+  if (
+    records.length === 0
+  ) {
+
+    history.innerHTML =
+      '<div class="no-history">' +
+      '아직 가격 기록이 없습니다.' +
+      '</div>';
+
+    return;
+  }
+
+
+  /*
+   * 최신 기록이 위로
+   */
+
+  const sorted =
+    [...records].sort(
+      function(a, b) {
+
+        return new Date(b.timestamp) -
+               new Date(a.timestamp);
+
+      }
+    );
+
+
+  history.innerHTML =
+    sorted
+      .map(function(record) {
+
+        const change =
+          Number(record.change) || 0;
+
+
+        const rate =
+          Number(record.changeRate) || 0;
+
+
+        let className =
+          "same";
+
+
+        let arrow =
+          "—";
+
+
+        let sign =
+          "";
+
+
+        if (
+          change > 0
+        ) {
+
+          className =
+            "up";
+
+          arrow =
+            "▲";
+
+          sign =
+            "+";
+
+        } else if (
+          change < 0
+        ) {
+
+          className =
+            "down";
+
+          arrow =
+            "▼";
+        }
+
+
+        /*
+         * 신규
+         */
+
+        if (
+          record.direction === "신규"
+        ) {
+
+          className =
+            "same";
+
+          arrow =
+            "●";
+
+          sign =
+            "";
+        }
+
+
+        return `
+
+          <div class="history-row">
+
+
+            <div class="history-time">
+
+              ${date(record.timestamp)}
+
+            </div>
+
+
+            <div class="history-name">
+
+              ${escapeHtml(record.name)}
+
+            </div>
+
+
+            <div class="history-price">
+
+              ${number(record.price)} G
+
+            </div>
+
+
+            <div
+              class="history-change ${className}"
+            >
+
+              ${arrow}
+
+              ${sign}${number(change)} G
+
+              ${record.direction === "신규"
+                ? ""
+                : " (" +
+                  sign +
+                  rate.toFixed(2) +
+                  "%)"
+              }
+
+            </div>
+
+
+          </div>
+
+        `;
+
+      })
+      .join("");
+}
+
+
+/*******************************************************
+ * 상세 닫기
+ *******************************************************/
+
+function closeDetail(event) {
+
+  if (
+    event &&
+    event.target !== event.currentTarget
+  ) {
+
+    return;
+  }
+
+
+  document.getElementById(
+    "detail"
+  ).style.display =
+    "none";
+
+
+  currentItem =
+    null;
+}
+
+
+/*******************************************************
+ * HTML escape
+ *******************************************************/
+
+function escapeHtml(text) {
+
+  return String(text)
+
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+
+    .replace(
+      /</g,
+      "&lt;"
+    )
+
+    .replace(
+      />/g,
+      "&gt;"
+    )
+
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+
+    .replace(
+      /'/g,
+      "&#039;"
+    );
+}
+
+
+/*******************************************************
+ * ESC 키로 닫기
+ *******************************************************/
+
+document.addEventListener(
+  "keydown",
+  function(event) {
+
+    if (
+      event.key === "Escape"
+    ) {
+
+      document.getElementById(
+        "detail"
+      ).style.display =
+        "none";
+    }
+
+  }
+);
+
+
+/*******************************************************
+ * 최초 실행
+ *******************************************************/
+
+loadData();
+
+
+/*******************************************************
+ * 30초마다 현재 시세 갱신
+ *
+ * 가격 기록은 서버에서 동기화될 때 생성된다.
+ *******************************************************/
+
+setInterval(
+  loadData,
+  30000
+);
+
+</script>
+
+</body>
+
+</html>
