@@ -643,15 +643,16 @@ body {
 
 /*
  * =====================================================
- * Apps Script API 주소
+ * Cloudflare Worker API 주소
+ *
+ * GitHub Pages -> Worker -> Apps Script -> Sheets
+ * 구조이므로 여기에는 Apps Script URL이 아니라
+ * Worker URL을 넣는다.
  * =====================================================
- *
- * 여기에 Apps Script 배포 URL만 넣으면 됨.
- *
  */
 
 const API_URL =
-  "여기에_Apps_Script_배포_URL_넣기";
+  "https://late-water-2fc2.blackhoodty2023.workers.dev/";
 
 
 let marketData = [];
@@ -682,7 +683,7 @@ async function loadData() {
     const response =
       await fetch(
         API_URL +
-        "?action=market"
+        "?market=true"
       );
 
 
@@ -693,18 +694,22 @@ async function loadData() {
     }
 
 
-    const data =
+    const result =
       await response.json();
 
 
-    if (!Array.isArray(data)) {
+    if (
+      !result ||
+      result.success !== true ||
+      !Array.isArray(result.items)
+    ) {
       throw new Error(
         "잘못된 데이터 형식"
       );
     }
 
 
-    marketData = data;
+    marketData = result.items;
 
 
     render();
@@ -1240,7 +1245,7 @@ async function loadHistory(itemName) {
     const response =
       await fetch(
         API_URL +
-        "?action=history&item=" +
+        "?history=true&item=" +
         encodeURIComponent(
           itemName
         )
@@ -1257,17 +1262,25 @@ async function loadHistory(itemName) {
     }
 
 
-    const records =
+    const result =
       await response.json();
 
 
-    if (!Array.isArray(records)) {
+    if (
+      !result ||
+      result.success !== true ||
+      !Array.isArray(result.history)
+    ) {
 
       throw new Error(
         "잘못된 기록 데이터"
       );
 
     }
+
+
+    const records =
+      result.history;
 
 
     count.textContent =
