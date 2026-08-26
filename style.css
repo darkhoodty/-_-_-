@@ -1,0 +1,459 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+body {
+    background: #0b0e13;
+    color: #e8edf5;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    min-height: 100vh;
+}
+
+
+.container {
+    width: min(1100px, 94%);
+
+    margin: 0 auto;
+
+    padding: 30px 0 60px;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 28px;
+}
+
+
+.header h1 {
+    font-size: 28px;
+
+    font-weight: 700;
+
+    letter-spacing: -0.5px;
+}
+
+
+.header p {
+    margin-top: 6px;
+
+    color: #7f8998;
+
+    font-size: 14px;
+}
+
+
+#refreshButton {
+    border: 1px solid #29313d;
+
+    background: #151a22;
+
+    color: #dce3ed;
+
+    border-radius: 8px;
+
+    padding: 10px 15px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    transition: 0.15s;
+}
+
+
+#refreshButton:hover {
+    background: #1c232d;
+}
+
+
+#refreshButton:active {
+    transform: scale(0.97);
+}
+
+
+/* =========================================================
+   CONTROL
+========================================================= */
+
+.control-panel {
+    display: flex;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+}
+
+
+.control-panel input,
+.control-panel select {
+
+    height: 44px;
+
+    border: 1px solid #29313d;
+
+    background: #11161d;
+
+    color: #e8edf5;
+
+    border-radius: 8px;
+
+    padding: 0 13px;
+
+    outline: none;
+
+    font-size: 14px;
+}
+
+
+.control-panel input {
+    flex: 1;
+}
+
+
+.control-panel select {
+    width: 220px;
+
+    cursor: pointer;
+}
+
+
+.control-panel input:focus,
+.control-panel select:focus {
+    border-color: #4b5666;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status {
+    display: flex;
+
+    justify-content: space-between;
+
+    color: #697382;
+
+    font-size: 12px;
+
+    margin-bottom: 25px;
+}
+
+
+/* =========================================================
+   SECTION TITLE
+========================================================= */
+
+.section-title {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 10px;
+}
+
+
+.section-title h2 {
+    font-size: 18px;
+}
+
+
+#recordCount {
+    color: #707b8b;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   HISTORY
+========================================================= */
+
+.history-list {
+    border-top: 1px solid #202731;
+}
+
+
+.history-item {
+
+    display: grid;
+
+    grid-template-columns:
+        90px
+        minmax(150px, 1fr)
+        150px
+        120px
+        110px
+        90px;
+
+    align-items: center;
+
+    min-height: 72px;
+
+    border-bottom: 1px solid #1c222b;
+
+    transition: background 0.15s;
+}
+
+
+.history-item:hover {
+    background: #11161d;
+}
+
+
+/* 방향 */
+
+.direction {
+    font-size: 20px;
+
+    text-align: center;
+}
+
+
+.direction.up {
+    color: #ff4d5a;
+}
+
+
+.direction.down {
+    color: #4d8dff;
+}
+
+
+.direction.new {
+    color: #8b96a7;
+
+    font-size: 14px;
+}
+
+
+/* 아이템 */
+
+.item-name {
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+
+.normalized {
+    margin-top: 4px;
+
+    color: #687382;
+
+    font-size: 11px;
+}
+
+
+/* 가격 */
+
+.price {
+    text-align: right;
+
+    font-size: 15px;
+
+    font-weight: 600;
+}
+
+
+.price-label {
+    color: #697382;
+
+    font-size: 11px;
+
+    margin-right: 4px;
+}
+
+
+/* 변동 */
+
+.change {
+    text-align: right;
+
+    font-weight: 600;
+
+    font-size: 14px;
+}
+
+
+.change.up {
+    color: #ff4d5a;
+}
+
+
+.change.down {
+    color: #4d8dff;
+}
+
+
+.change.neutral {
+    color: #8792a2;
+}
+
+
+/* 변동률 */
+
+.change-rate {
+    text-align: right;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.change-rate.up {
+    color: #ff4d5a;
+}
+
+
+.change-rate.down {
+    color: #4d8dff;
+}
+
+
+.change-rate.neutral {
+    color: #8792a2;
+}
+
+
+/* 시간 */
+
+.time {
+    text-align: right;
+
+    color: #687382;
+
+    font-size: 12px;
+
+    padding-right: 10px;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.loading,
+.empty,
+.error {
+    padding: 60px 20px;
+
+    text-align: center;
+
+    color: #697382;
+
+    font-size: 14px;
+}
+
+
+.error {
+    color: #ff6873;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 800px) {
+
+    .container {
+        width: 94%;
+
+        padding-top: 20px;
+    }
+
+
+    .header h1 {
+        font-size: 23px;
+    }
+
+
+    .control-panel {
+        flex-direction: column;
+    }
+
+
+    .control-panel select {
+        width: 100%;
+    }
+
+
+    .history-item {
+
+        grid-template-columns:
+            40px
+            1fr
+            100px;
+
+        padding: 15px 5px;
+
+        row-gap: 7px;
+
+    }
+
+
+    .direction {
+        grid-row: span 2;
+    }
+
+
+    .item-name {
+        grid-column: 2;
+    }
+
+
+    .price {
+        grid-column: 3;
+    }
+
+
+    .change {
+        grid-column: 2;
+
+        text-align: left;
+    }
+
+
+    .change-rate {
+        grid-column: 3;
+    }
+
+
+    .time {
+        grid-column: 2 / 4;
+
+        text-align: left;
+
+        padding: 0;
+    }
+
+
+    .normalized {
+        display: none;
+    }
+
+}
