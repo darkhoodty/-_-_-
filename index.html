@@ -116,6 +116,16 @@ body {
   border-color: #536dfe;
 }
 
+.multiply-input::-webkit-inner-spin-button,
+.multiply-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.multiply-input {
+  -moz-appearance: textfield;
+}
+
 .multiply-symbol {
   display: none;
 }
@@ -1090,7 +1100,11 @@ function render() {
           >
 
             <div class="item-name">
-              ${escapeHtml(item.name)}
+              ${escapeHtml(item.name)}${
+                document.getElementById("multiplyEnabled").checked
+                  ? " X " + number(getMultiplier())
+                  : ""
+              }
             </div>
 
 
@@ -1265,7 +1279,12 @@ function openDetail(itemName) {
       "detailName"
     )
     .textContent =
-      item.name;
+      item.name +
+      (
+        document.getElementById("multiplyEnabled").checked
+          ? " X " + number(getMultiplier())
+          : ""
+      );
 
 
   document
