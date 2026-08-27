@@ -76,6 +76,50 @@ body {
   border-color: #536dfe;
 }
 
+.multiply-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.multiply-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #e9edf5;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  user-select: none;
+}
+
+.multiply-check input {
+  margin: 0;
+  accent-color: #536dfe;
+}
+
+.multiply-input {
+  width: 75px;
+  padding: 9px 10px;
+  border: 1px solid #252b35;
+  border-radius: 8px;
+  outline: none;
+  background: #131821;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.multiply-input:focus {
+  border-color: #536dfe;
+}
+
+.multiply-symbol {
+  display: none;
+}
+
 .market-bar {
   display: flex;
   justify-content: space-between;
@@ -421,6 +465,25 @@ body {
     width: 100%;
   }
 
+  .market-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .multiply-controls {
+    width: 100%;
+  }
+
+  .multiply-input {
+    flex: 1;
+  }
+
+  .multiply-check {
+    flex: 1;
+    justify-content: center;
+  }
+
   .grid {
     grid-template-columns: 1fr;
   }
@@ -509,6 +572,26 @@ body {
       class="market-status"
     >
       데이터 불러오는 중...
+    </div>
+
+    <div class="multiply-controls">
+      <label class="multiply-check">
+        <input
+          id="multiplyEnabled"
+          type="checkbox"
+        >
+        <span>배수:</span>
+      </label>
+
+      <input
+        id="multiplyCount"
+        class="multiply-input"
+        type="number"
+        min="1"
+        step="1"
+        value="64"
+        title="배수"
+      >
     </div>
 
   </div>
@@ -763,6 +846,42 @@ function number(value) {
 
 /*
  * =====================================================
+ * 가격 배수
+ * =====================================================
+ */
+
+function getMultiplier() {
+
+  const enabled =
+    document.getElementById("multiplyEnabled").checked;
+
+  if (!enabled) {
+    return 1;
+  }
+
+  const value =
+    Number(
+      document.getElementById("multiplyCount").value
+    );
+
+  return Number.isFinite(value) && value > 0
+    ? value
+    : 1;
+
+}
+
+
+function multipliedPrice(value) {
+
+  return (
+    Number(value) || 0
+  ) * getMultiplier();
+
+}
+
+
+/*
+ * =====================================================
  * 날짜
  * =====================================================
  */
@@ -904,8 +1023,14 @@ function render() {
           ) || 0;
 
 
+        const displayCurrent =
+          multipliedPrice(current);
+
+        const displayPrevious =
+          multipliedPrice(previous);
+
         const change =
-          current - previous;
+          displayCurrent - displayPrevious;
 
 
         let rate = 0;
@@ -970,7 +1095,7 @@ function render() {
 
 
             <div class="current-price">
-              ${number(current)} G
+              ${number(displayCurrent)} G
             </div>
 
 
@@ -1076,8 +1201,14 @@ function openDetail(itemName) {
     ) || 0;
 
 
+  const displayCurrent =
+    multipliedPrice(current);
+
+  const displayPrevious =
+    multipliedPrice(previous);
+
   const change =
-    current - previous;
+    displayCurrent - displayPrevious;
 
 
   let rate = 0;
@@ -1173,7 +1304,7 @@ function openDetail(itemName) {
       "statCurrent"
     )
     .textContent =
-      number(current) +
+      number(displayCurrent) +
       " G";
 
 
@@ -1550,6 +1681,44 @@ document
 
 /*
  * =====================================================
+ * 가격 배수 입력
+ * =====================================================
+ */
+
+document
+  .getElementById("multiplyEnabled")
+  .addEventListener(
+    "change",
+    function() {
+
+      render();
+
+      if (currentItem) {
+        openDetail(currentItem.name);
+      }
+
+    }
+  );
+
+
+document
+  .getElementById("multiplyCount")
+  .addEventListener(
+    "input",
+    function() {
+
+      render();
+
+      if (currentItem) {
+        openDetail(currentItem.name);
+      }
+
+    }
+  );
+
+
+/*
+ * =====================================================
  * 최초 실행
  * =====================================================
  */
@@ -1565,7 +1734,7 @@ loadData();
 
 setInterval(
   loadData,
-  30000
+  600000
 );
 
 </script>
