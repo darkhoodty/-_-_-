@@ -1,8 +1,15 @@
+```html
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
 
 <title>띵타 유저상점 시세</title>
 
@@ -87,9 +94,11 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
+
   color: #e9edf5;
   font-size: 14px;
   font-weight: 800;
+
   cursor: pointer;
   user-select: none;
 }
@@ -101,14 +110,20 @@ body {
 
 .multiply-input {
   width: 75px;
+
   padding: 9px 10px;
+
   border: 1px solid #252b35;
   border-radius: 8px;
+
   outline: none;
+
   background: #131821;
   color: white;
+
   font-size: 14px;
   font-weight: 700;
+
   text-align: right;
 }
 
@@ -539,8 +554,8 @@ body {
 }
 
 </style>
-</head>
 
+</head>
 
 <body>
 
@@ -585,12 +600,16 @@ body {
     </div>
 
     <div class="multiply-controls">
+
       <label class="multiply-check">
+
         <input
           id="multiplyEnabled"
           type="checkbox"
         >
+
         <span>배수:</span>
+
       </label>
 
       <input
@@ -602,6 +621,7 @@ body {
         value="64"
         title="배수"
       >
+
     </div>
 
   </div>
@@ -739,8 +759,6 @@ body {
  * Cloudflare Worker API 주소
  *
  * GitHub Pages -> Worker -> Apps Script -> Sheets
- * 구조이므로 여기에는 Apps Script URL이 아니라
- * Worker URL을 넣는다.
  * =====================================================
  */
 
@@ -781,9 +799,11 @@ async function loadData() {
 
 
     if (!response.ok) {
+
       throw new Error(
         "HTTP " + response.status
       );
+
     }
 
 
@@ -796,9 +816,11 @@ async function loadData() {
       result.success !== true ||
       !Array.isArray(result.items)
     ) {
+
       throw new Error(
         "잘못된 데이터 형식"
       );
+
     }
 
 
@@ -827,12 +849,17 @@ async function loadData() {
 
 
     grid.innerHTML = `
+
       <div class="loading">
+
         데이터를 불러오지 못했습니다.<br>
+
         <small>
           브라우저 개발자 도구(F12)의 Console을 확인하세요.
         </small>
+
       </div>
+
     `;
 
   }
@@ -857,22 +884,32 @@ function number(value) {
 /*
  * =====================================================
  * 가격 배수
+ *
+ * 배수 OFF -> 1
+ * 배수 ON  -> 입력값
  * =====================================================
  */
 
 function getMultiplier() {
 
   const enabled =
-    document.getElementById("multiplyEnabled").checked;
+    document.getElementById(
+      "multiplyEnabled"
+    ).checked;
+
 
   if (!enabled) {
     return 1;
   }
 
+
   const value =
     Number(
-      document.getElementById("multiplyCount").value
+      document.getElementById(
+        "multiplyCount"
+      ).value
     );
+
 
   return Number.isFinite(value) && value > 0
     ? value
@@ -880,6 +917,12 @@ function getMultiplier() {
 
 }
 
+
+/*
+ * =====================================================
+ * 배수 적용 가격
+ * =====================================================
+ */
 
 function multipliedPrice(value) {
 
@@ -1008,12 +1051,15 @@ function render() {
   if (filtered.length === 0) {
 
     grid.innerHTML = `
+
       <div class="loading">
         등록된 데이터가 없습니다.
       </div>
+
     `;
 
     return;
+
   }
 
 
@@ -1021,6 +1067,9 @@ function render() {
     filtered
       .map(item => {
 
+        /*
+         * 원본 가격
+         */
         const current =
           Number(
             item.currentPrice
@@ -1033,16 +1082,35 @@ function render() {
           ) || 0;
 
 
+        /*
+         * 화면에 표시할 가격
+         */
         const displayCurrent =
           multipliedPrice(current);
+
 
         const displayPrevious =
           multipliedPrice(previous);
 
+
+        /*
+         * 변동 금액은
+         * 배수 적용된 가격끼리 계산
+         */
         const change =
-          displayCurrent - displayPrevious;
+          displayCurrent -
+          displayPrevious;
 
 
+        /*
+         * 중요:
+         *
+         * 변동률은 배수 적용 전의
+         * 원본 가격을 기준으로 계산한다.
+         *
+         * 따라서 ×64를 해도
+         * +10%는 그대로 +10%.
+         */
         let rate = 0;
 
 
@@ -1050,7 +1118,7 @@ function render() {
 
           rate =
             (
-              change /
+              (current - previous) /
               previous
             ) * 100;
 
@@ -1100,16 +1168,27 @@ function render() {
           >
 
             <div class="item-name">
-              ${escapeHtml(item.name)}${
-                document.getElementById("multiplyEnabled").checked
-                  ? " X " + number(getMultiplier())
+
+              ${escapeHtml(item.name)}
+
+              ${
+                document.getElementById(
+                  "multiplyEnabled"
+                ).checked
+
+                  ? " X " +
+                    number(getMultiplier())
+
                   : ""
               }
+
             </div>
 
 
             <div class="current-price">
+
               ${number(displayCurrent)} G
+
             </div>
 
 
@@ -1215,16 +1294,28 @@ function openDetail(itemName) {
     ) || 0;
 
 
+  /*
+   * 배수 적용
+   */
   const displayCurrent =
     multipliedPrice(current);
+
 
   const displayPrevious =
     multipliedPrice(previous);
 
+
+  /*
+   * 변동 금액
+   */
   const change =
-    displayCurrent - displayPrevious;
+    displayCurrent -
+    displayPrevious;
 
 
+  /*
+   * 변동률은 원본 가격 기준
+   */
   let rate = 0;
 
 
@@ -1232,7 +1323,7 @@ function openDetail(itemName) {
 
     rate =
       (
-        change /
+        (current - previous) /
         previous
       ) * 100;
 
@@ -1274,6 +1365,10 @@ function openDetail(itemName) {
       : "";
 
 
+  /*
+   * 이름
+   */
+
   document
     .getElementById(
       "detailName"
@@ -1281,20 +1376,35 @@ function openDetail(itemName) {
     .textContent =
       item.name +
       (
-        document.getElementById("multiplyEnabled").checked
-          ? " X " + number(getMultiplier())
+        document.getElementById(
+          "multiplyEnabled"
+        ).checked
+
+          ? " X " +
+            number(getMultiplier())
+
           : ""
       );
 
 
+  /*
+   * 상세창 가장 큰 가격
+   *
+   * 기존에는 current를 사용해서
+   * 배수가 적용되지 않았음.
+   */
   document
     .getElementById(
       "detailPrice"
     )
     .textContent =
-      number(current) +
+      number(displayCurrent) +
       " G";
 
+
+  /*
+   * 변동
+   */
 
   const changeElement =
     document.getElementById(
@@ -1318,6 +1428,10 @@ function openDetail(itemName) {
     "%)";
 
 
+  /*
+   * 현재 가격
+   */
+
   document
     .getElementById(
       "statCurrent"
@@ -1327,14 +1441,22 @@ function openDetail(itemName) {
       " G";
 
 
+  /*
+   * 이전 가격
+   */
+
   document
     .getElementById(
       "statPrevious"
     )
     .textContent =
-      number(previous) +
+      number(displayPrevious) +
       " G";
 
+
+  /*
+   * 거래 횟수
+   */
 
   document
     .getElementById(
@@ -1347,6 +1469,10 @@ function openDetail(itemName) {
       "회";
 
 
+  /*
+   * 상세창 열기
+   */
+
   document
     .getElementById(
       "detail"
@@ -1354,6 +1480,10 @@ function openDetail(itemName) {
     .style.display =
       "block";
 
+
+  /*
+   * 가격 기록
+   */
 
   loadHistory(item.name);
 
@@ -1381,9 +1511,11 @@ async function loadHistory(itemName) {
 
 
   history.innerHTML = `
+
     <div class="no-history">
       가격 기록을 불러오는 중...
     </div>
+
   `;
 
 
@@ -1452,9 +1584,11 @@ async function loadHistory(itemName) {
 
 
     history.innerHTML = `
+
       <div class="no-history">
         가격 기록을 불러오지 못했습니다.
       </div>
+
     `;
 
   }
@@ -1479,9 +1613,11 @@ function renderHistory(records) {
   if (records.length === 0) {
 
     history.innerHTML = `
+
       <div class="no-history">
         아직 가격 기록이 없습니다.
       </div>
+
     `;
 
     return;
@@ -1501,16 +1637,44 @@ function renderHistory(records) {
     sorted
       .map(record => {
 
-        const change =
+        /*
+         * 서버 기록의 원본 변동 금액
+         */
+        const rawChange =
           Number(
             record.change
           ) || 0;
 
 
+        /*
+         * 화면 표시용 변동 금액
+         */
+        const change =
+          rawChange *
+          getMultiplier();
+
+
+        /*
+         * 서버에서 저장한 변동률은
+         * 원본 가격 기준이므로
+         * 배수와 관계없이 그대로 사용
+         */
         const rate =
           Number(
             record.changeRate
           ) || 0;
+
+
+        /*
+         * 화면 표시용 가격
+         */
+        const displayPrice =
+          (
+            Number(
+              record.price
+            ) || 0
+          ) *
+          getMultiplier();
 
 
         let className =
@@ -1549,6 +1713,10 @@ function renderHistory(records) {
         }
 
 
+        /*
+         * 신규 기록
+         */
+
         if (
           record.direction ===
           "신규"
@@ -1583,23 +1751,38 @@ function renderHistory(records) {
           <div class="history-row">
 
             <div class="history-time">
+
               ${date(record.timestamp)}
+
             </div>
+
 
             <div class="history-name">
-              ${escapeHtml(record.name || "")}
+
+              ${escapeHtml(
+                record.name || ""
+              )}
+
             </div>
 
+
             <div class="history-price">
-              ${number(record.price)} G
+
+              ${number(displayPrice)} G
+
             </div>
+
 
             <div
               class="history-change ${className}"
             >
+
               ${arrow}
+
               ${sign}${number(change)} G
+
               ${changeText}
+
             </div>
 
           </div>
@@ -1700,36 +1883,56 @@ document
 
 /*
  * =====================================================
- * 가격 배수 입력
+ * 가격 배수 체크박스
  * =====================================================
  */
 
 document
-  .getElementById("multiplyEnabled")
+  .getElementById(
+    "multiplyEnabled"
+  )
   .addEventListener(
     "change",
     function() {
 
       render();
 
+
       if (currentItem) {
-        openDetail(currentItem.name);
+
+        openDetail(
+          currentItem.name
+        );
+
       }
 
     }
   );
 
 
+/*
+ * =====================================================
+ * 가격 배수 입력
+ * =====================================================
+ */
+
 document
-  .getElementById("multiplyCount")
+  .getElementById(
+    "multiplyCount"
+  )
   .addEventListener(
     "input",
     function() {
 
       render();
 
+
       if (currentItem) {
-        openDetail(currentItem.name);
+
+        openDetail(
+          currentItem.name
+        );
+
       }
 
     }
@@ -1747,7 +1950,7 @@ loadData();
 
 /*
  * =====================================================
- * 30초마다 갱신
+ * 10분마다 갱신
  * =====================================================
  */
 
@@ -1759,4 +1962,5 @@ setInterval(
 </script>
 
 </body>
+
 </html>
